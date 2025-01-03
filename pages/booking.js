@@ -2,6 +2,7 @@ import { useState } from 'react';
 import BookingForm from '../components/BookingForm';
 import BookingSummary from '../components/BookingSummary';
 import { createBooking } from '../utils/api';
+import '../styles/global.css';
 
 const Booking = () => {
   const [bookingDetails, setBookingDetails] = useState(null);

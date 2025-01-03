@@ -1,11 +1,125 @@
+/* styles/globals.css */
+
+/* General body styling */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #dceefb, #f3f7f9); /* Soft pastel gradient background */
+  color: #444444; /* Soft dark grey for text */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Link Styling */
+a {
+  text-decoration: none;
+  color: #66b2b2; /* Sea Green for links */
+}
+
+a:hover {
+  color: #4e8c8c; /* Slightly darker on hover */
+  transition: color 0.3s ease;
+}
+
+/* Page Container */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header Styling */
+h1, h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #66b2b2; /* Sea Green */
+  margin-bottom: 20px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Button Styling */
+button {
+  padding: 12px 20px;
+  background-color: #66b2b2; /* Sea Green */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+}
+
+/* Button Hover Effect */
+button:hover {
+  background-color: #4e8c8c; /* Slightly darker on hover */
+  transform: scale(1.1);
+}
+
+/* Animation for fade-in */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
-  h1, h2 {
-    color: #333;
+  to {
+    opacity: 1;
   }
-  
+}
+
+/* Form Styling */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 20px 0;
+  animation: slideUp 1s ease-in-out;
+}
+
+input, select {
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+input:focus, select:focus {
+  border-color: #66b2b2; /* Highlight focus with sea green */
+  outline: none;
+}
+
+/* Animation for sliding up */
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Footer Styling */
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #66b2b2; /* Sea Green */
+  color: white;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+/* Error Message Styling */
+.error {
+  color: red;
+  font-size: 1rem;
+  margin-top: 10px;
+  text-align: center;
+}

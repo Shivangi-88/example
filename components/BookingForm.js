@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router'; // Import the useRouter hook for navigation
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router'; 
 import styles from '../styles/BookingForm.module.css';
+import '../styles/global.css';
 
 const BookingForm = () => {
   const [details, setDetails] = useState({
@@ -10,8 +11,10 @@ const BookingForm = () => {
     time: '',
     guests: '',
   });
-  const [error, setError] = useState('');  // To store error message
-  const router = useRouter(); // Initialize the router
+  const [availableSlots, setAvailableSlots] = useState([]); // Available slots for the selected date
+  const [loadingSlots, setLoadingSlots] = useState(false); // Loading state for slots
+  const [error, setError] = useState('');
+  const router = useRouter();
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -20,18 +23,47 @@ const BookingForm = () => {
       ...prevDetails,
       [name]: value,
     }));
+
+    // Clear error when user changes input
+    if (error) setError('');
   };
 
-  // Function to check if the selected time slot is available
+  // Fetch available time slots for the selected date
+  const fetchAvailableSlots = async (date) => {
+    setLoadingSlots(true); // Start loading state
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/available-slots?date=${date}`,
+        { method: 'GET' }
+      );
+      const data = await response.json();
+      if (data.availableSlots) {
+        setAvailableSlots(data.availableSlots);
+      } else {
+        setAvailableSlots([]);
+      }
+    } catch (error) {
+      console.error('Error fetching available slots:', error);
+      setAvailableSlots([]);
+    } finally {
+      setLoadingSlots(false); // End loading state
+    }
+  };
+
+  // Update available time slots when the date is changed
+  useEffect(() => {
+    if (details.date) {
+      fetchAvailableSlots(details.date); // Fetch slots when a date is selected
+    }
+  }, [details.date]);
+
+  // Function to check availability of a specific time slot
   const checkAvailability = async (date, time) => {
     try {
       const response = await fetch(
         `http://localhost:5000/api/check-availability?date=${date}&time=${time}`,
-        {
-          method: 'GET',
-        }
+        { method: 'GET' }
       );
-
       const data = await response.json();
       return data.isAvailable;
     } catch (error) {
@@ -57,14 +89,14 @@ const BookingForm = () => {
       // Redirect to confirmation page and pass details as query params
       router.push({
         pathname: '/confirmation',
-        query: details, // Pass the details as query parameters
+        query: { ...details, bookingId: response.bookingId }, // Include booking ID
       });
     } else {
-      alert('Error with booking!');
+      alert('Error creating booking!');
     }
   };
 
-  // Function to make the API call for booking
+  // Function to create the booking
   const createBooking = async (details) => {
     try {
       const response = await fetch('http://localhost:5000/api/create', {
@@ -116,13 +148,29 @@ const BookingForm = () => {
       </div>
       <div className={styles.inputGroup}>
         <label>Reservation Time:</label>
-        <input
-          type="time"
+        <select
           name="time"
           value={details.time}
           onChange={handleChange}
           required
-        />
+        >
+          <option value="">Select a time</option>
+          {loadingSlots ? (
+            <option value="" disabled>
+              Loading slots...
+            </option>
+          ) : availableSlots.length > 0 ? (
+            availableSlots.map((slot) => (
+              <option key={slot} value={slot}>
+                {slot}
+              </option>
+            ))
+          ) : (
+            <option value="" disabled>
+              No slots available
+            </option>
+          )}
+        </select>
       </div>
       <div className={styles.inputGroup}>
         <label>Number of Guests:</label>
@@ -135,7 +183,9 @@ const BookingForm = () => {
         />
       </div>
       {error && <div className={styles.error}>{error}</div>} {/* Show error if any */}
-      <button type="submit" className={styles.submitButton}>Submit Reservation</button>
+      <button type="submit" className={styles.submitButton}>
+        Submit Reservation
+      </button>
     </form>
   );
 };

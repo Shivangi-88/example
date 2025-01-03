@@ -1,5 +1,5 @@
 // /pages/book.js
-
+import '../styles/global.css';
 import React from 'react';
 import BookingForm from '../components/BookingForm'; // Assuming the form is in the 'components' folder
 

@@ -1,4 +1,5 @@
 import styles from '../styles/BookingForm.module.css';
+import '../styles/global.css';
 
 const BookingSummary = ({ bookingDetails }) => {
   return (
